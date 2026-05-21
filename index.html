@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Sistema de Gestion</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+ 
+  <header>
+    <h1>Sistema de Gestion</h1>
+    <nav>
+      <a href="index.html">Dashboard</a>
+      <a href="registro.html">Registrar</a>
+    </nav>
+  </header>
+ 
+  <main>
+    <h2>Panel de Control</h2>
+ 
+    <section aria-label="Estadísticas">
+      <article>
+        <h3>Total Registros</h3>
+        <p>1,284</p>
+      </article>
+      <article>
+        <h3>Activos</h3>
+        <p>948</p>
+      </article>
+      <article>
+        <h3>Pendientes</h3>
+        <p>67</p>
+      </article>
+      <article>
+        <h3>Inactivos</h3>
+        <p>269</p>
+      </article>
+    </section>
+ 
+    <section aria-labelledby="tabla-titulo">
+      <h2 id="tabla-titulo">Registros Recientes</h2>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">#ID</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Categoría</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#0012</td>
+            <td>Ana Martínez</td>
+            <td>Tipo A</td>
+            <td>21/05/2026</td>
+            <td>Activo</td>
+          </tr>
+          <tr>
+            <td>#0011</td>
+            <td>Carlos Pérez</td>
+            <td>Tipo B</td>
+            <td>20/05/2026</td>
+            <td>Pendiente</td>
+          </tr>
+          <tr>
+            <td>#0010</td>
+            <td>María López</td>
+            <td>Tipo A</td>
+            <td>19/05/2026</td>
+            <td>Activo</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+ 
+  <aside>
+    <h2>Actividad Reciente</h2>
+    <ul>
+      <li><strong>Ana M.</strong> registró un nuevo dato. <time datetime="2026-05-21T14:30">Hace 5 min</time></li>
+      <li><strong>Sistema</strong> generó reporte automático. <time datetime="2026-05-21T14:00">Hace 35 min</time></li>
+      <li><strong>Carlos P.</strong> actualizó estado a <em>Activo</em>. <time datetime="2026-05-21T13:00">Hace 1 h</time></li>
+    </ul>
+  </aside>
+ 
+  <footer>
+    <p>© 2026 Sistema de Gestion — Etapa 1</p>
+  </footer>
+ 
+</body>
+</html>
+ 

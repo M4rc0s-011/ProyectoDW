@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro — Sistema de Gestion</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+ 
+  <header>
+    <h1>Sistema de Gestion</h1>
+    <nav>
+      <a href="index.html">Dashboard</a>
+      <a href="registro.html">Registrar</a>
+    </nav>
+  </header>
+ 
+  <main>
+    <h2>Registro de Datos</h2>
+ 
+    <form id="registroForm" novalidate>
+ 
+      <fieldset>
+        <legend>Información Personal</legend>
+ 
+        <p>
+          <label for="nombre">Nombre <abbr title="requerido">*</abbr></label>
+          <input type="text" id="nombre" name="nombre" placeholder="Ej: Ana" required autocomplete="given-name" />
+        </p>
+ 
+        <p>
+          <label for="apellido">Apellido <abbr title="requerido">*</abbr></label>
+          <input type="text" id="apellido" name="apellido" placeholder="Ej: Martínez" required autocomplete="family-name" />
+        </p>
+ 
+        <p>
+          <label for="cedula">Cédula <abbr title="requerido">*</abbr></label>
+          <input type="text" id="cedula" name="cedula" placeholder="000-0000000-0" required inputmode="numeric" />
+          <small>Formato: 000-0000000-0</small>
+        </p>
+ 
+        <p>
+          <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+          <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" max="2008-01-01" />
+          <small>Debe ser mayor de 18 años.</small>
+        </p>
+ 
+        <p>
+          <label for="genero">Género</label>
+          <select id="genero" name="genero">
+            <option value="" disabled selected>Seleccionar…</option>
+            <option value="M">Masculino</option>
+            <option value="F">Femenino</option>
+            <option value="O">Otro</option>
+            <option value="NE">Prefiero no indicar</option>
+          </select>
+        </p>
+ 
+        <p>
+          <label for="telefono">Teléfono</label>
+          <input type="tel" id="telefono" name="telefono" placeholder="809-000-0000" autocomplete="tel" />
+        </p>
+ 
+        <p>
+          <label for="estado">Estado <abbr title="requerido">*</abbr></label>
+          <select id="estado" name="estado" required>
+            <option value="" disabled selected>Seleccionar…</option>
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+            <option value="pendiente">Pendiente</option>
+          </select>
+        </p>
+      </fieldset>
+ 
+      <fieldset>
+        <legend>Contacto y Ubicación</legend>
+ 
+        <p>
+          <label for="email">Correo Electrónico <abbr title="requerido">*</abbr></label>
+          <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" required autocomplete="email" />
+        </p>
+ 
+        <p>
+          <label for="provincia">Provincia</label>
+          <select id="provincia" name="provincia">
+            <option value="" disabled selected>Seleccionar…</option>
+            <option value="SD">Santo Domingo</option>
+            <option value="STG" selected>Santiago</option>
+            <option value="LV">La Vega</option>
+            <option value="SPM">San Pedro de Macorís</option>
+            <option value="OTR">Otra</option>
+          </select>
+        </p>
+ 
+        <p>
+          <label for="direccion">Dirección</label>
+          <textarea id="direccion" name="direccion" rows="3" placeholder="Calle, número, sector…"></textarea>
+        </p>
+      </fieldset>
+ 
+      <fieldset>
+        <legend>Clasificación</legend>
+ 
+        <p>
+          <label for="categoria">Categoría <abbr title="requerido">*</abbr></label>
+          <select id="categoria" name="categoria" required>
+            <option value="" disabled selected>Seleccionar…</option>
+            <option value="A">Tipo A — Prioritario</option>
+            <option value="B">Tipo B — Estándar</option>
+            <option value="C">Tipo C — Secundario</option>
+          </select>
+        </p>
+ 
+        <p>
+          <label for="observaciones">Observaciones</label>
+          <textarea id="observaciones" name="observaciones" rows="3" maxlength="500" placeholder="Notas adicionales…"></textarea>
+          <small>Máximo 500 caracteres.</small>
+        </p>
+      </fieldset>
+ 
+      <p>
+        <label>
+          <input type="checkbox" name="consentimiento" required />
+          Confirmo que los datos son correctos y acepto los <a href="#">Términos de Uso</a>.
+        </label>
+      </p>
+ 
+      <p>
+        <button type="reset">Limpiar</button>
+        <button type="submit">Guardar Registro</button>
+      </p>
+ 
+    </form>
+  </main>
+ 
+  <footer>
+    <p>© 2026 Sistema de Gestion — Etapa 1</p>
+  </footer>
+ 
+</body>
+</html>
+ 
