@@ -1,307 +1,342 @@
+ /* Desarrollado por: Kirsys Méndez Simé - 100069206*/
 
- /* Desarrollado por: Kirsys Méndez Simé - 100069206 */
+ /*elimina márgenes y rellenos predeterminados, y establece un modelo de caja más intuitivo*/
 
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
- 
+/*variables de color y estilo para mantener consistencia en el diseño*/
+:root {
+  --primary: #0b1838;
+  --secondary: #F68121;
+  --bg: #f4f6fb;
+  --text: #222;
+  --gray: #666;
+  --light: #eee;
+  --white: #fff;
+  --radius: 6px;
+}
+/*fuente base, fondo y color de texto para toda la página*/
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f6fb;
-  color: #222;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
 }
- 
-/* ── Header ── */
+
+/*Header*/
+
 header {
-  background-color: #0b1838;
-  color: white;
+  background: var(--primary);
+  color: var(--white);
   padding: 16px 32px;
+
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
   gap: 12px;
 }
- 
+/*título del header principal*/
 header h1 {
+  color: var(--secondary);
   font-size: 1.3rem;
-  color: #F68121;
 }
- 
+
+/*navegación*/
 header nav {
   display: flex;
   gap: 20px;
 }
- 
+
+/*link del menu*/
 header nav a {
-  color: white;
+  color: var(--white);
   text-decoration: none;
-  font-size: 0.95rem;
+  transition: 0.3s;
 }
- 
+/*hover del menu*/
 header nav a:hover {
-  color: #F68121;
+  color: var(--secondary);
 }
- 
-/* ── Main ── */
-main {
+
+/*  Layout  */
+
+/* Títulos */
+main,
+aside {
   max-width: 1100px;
   margin: 32px auto;
   padding: 0 20px;
 }
- 
-main h2 {
-  font-size: 1.4rem;
-  color: #0b1838;
+
+main h2,
+aside h2 {
+  color: var(--primary);
   margin-bottom: 20px;
 }
- 
-/* ── Tarjetas de estadísticas ── */
-section {
-  margin-bottom: 32px;
-}
- 
+
+/* Estadísticas */
+
 section[aria-label="Estadísticas"] {
   display: flex;
-  gap: 16px;
   flex-wrap: wrap;
+  gap: 16px;
 }
- 
+
 section[aria-label="Estadísticas"] article {
-  background: white;
-  border-left: 4px solid #F68121;
-  padding: 20px 24px;
+  background: var(--white);
+  border-left: 4px solid var(--secondary);
+  padding: 20px;
+  border-radius: var(--radius);
+
   flex: 1;
-  min-width: 160px;
-  border-radius: 6px;
+  min-width: 180px;
 }
- 
-section[aria-label="Estadísticas"] article h3 {
+
+section[aria-label="Estadísticas"] h3 {
   font-size: 0.8rem;
-  color: #666;
   text-transform: uppercase;
+  color: var(--gray);
   margin-bottom: 8px;
 }
- 
-section[aria-label="Estadísticas"] article p {
+
+section[aria-label="Estadísticas"] p {
   font-size: 2rem;
   font-weight: bold;
-  color: #0b1838;
+  color: var(--primary);
 }
- 
-/* ── Tabla ── */
+
+/* Tabla */
+
 table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
-  border-radius: 6px;
+  background: var(--white);
+  border-radius: var(--radius);
   overflow: hidden;
 }
- 
+
 thead {
-  background-color: #0b1838;
-  color: white;
+  background: var(--primary);
+  color: var(--white);
 }
- 
-th, td {
+
+th,
+td {
   padding: 12px 16px;
   text-align: left;
-  font-size: 0.9rem;
 }
- 
+
 tbody tr {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--light);
 }
- 
+
 tbody tr:hover {
-  background-color: #f8fafc;
+  background: #f8fafc;
 }
- 
-/* ── Aside ── */
-aside {
-  max-width: 1100px;
-  margin: 0 auto 32px;
-  padding: 0 20px;
-}
- 
-aside h2 {
-  font-size: 1.1rem;
-  color: #0b1838;
-  margin-bottom: 12px;
-}
- 
+
+/* Aside */
+
 aside ul {
   list-style: none;
-  background: white;
-  border-radius: 6px;
+  background: var(--white);
+  border-radius: var(--radius);
   padding: 8px 16px;
 }
- 
-aside ul li {
+
+aside li {
   padding: 10px 0;
-  border-bottom: 1px solid #eee;
-  font-size: 0.9rem;
-  color: #444;
+  border-bottom: 1px solid var(--light);
 }
- 
-aside ul li:last-child {
+
+aside li:last-child {
   border-bottom: none;
 }
- 
+
 aside time {
   font-size: 0.8rem;
   color: #999;
   margin-left: 8px;
 }
- 
-/* ── Formulario ── */
+
+/* Formulario */
+
 form {
-  background: white;
+  background: var(--white);
   padding: 28px;
-  border-radius: 6px;
+  border-radius: var(--radius);
   max-width: 680px;
 }
- 
+
 fieldset {
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: var(--radius);
   padding: 16px 20px;
   margin-bottom: 20px;
 }
- 
+
 legend {
-  font-weight: bold;
-  color: #0b1838;
   padding: 0 8px;
-  font-size: 0.9rem;
+  font-weight: bold;
+  color: var(--primary);
 }
- 
+
 form p {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
   margin-bottom: 14px;
 }
- 
-form p:last-child {
-  margin-bottom: 0;
-}
- 
+
 label {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: #333;
 }
- 
+
 input,
 select,
 textarea {
-  padding: 9px 12px;
+  width: 100%;
+  padding: 10px 12px;
+
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 0.9rem;
+
   font-family: inherit;
-  width: 100%;
+  font-size: 0.9rem;
 }
- 
+
 input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: #F68121;
+  border-color: var(--secondary);
   box-shadow: 0 0 0 2px rgba(246, 129, 33, 0.15);
 }
- 
-small {
-  font-size: 0.75rem;
-  color: #888;
+
+/* Checkbox  */
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 0.85rem;
+  font-weight: normal;
 }
- 
-abbr {
-  color: #F68121;
-  text-decoration: none;
+
+.checkbox-label input {
+  width: auto;
 }
- 
-/* ── Botones ── */
+
+/*  Botones */
+
 button {
   padding: 10px 22px;
-  font-size: 0.9rem;
-  font-family: inherit;
   border: none;
   border-radius: 4px;
+
+  font-size: 0.9rem;
   cursor: pointer;
-  margin-right: 8px;
+
+  transition: 0.3s;
 }
- 
+
 button[type="submit"] {
-  background-color: #F68121;
-  color: white;
+  background: var(--secondary);
+  color: var(--white);
   font-weight: bold;
 }
- 
+
 button[type="submit"]:hover {
-  background-color: #c96a18;
+  background: #c96a18;
 }
- 
+
 button[type="reset"] {
-  background-color: #eee;
-  color: #333;
+  background: var(--light);
 }
- 
+
 button[type="reset"]:hover {
-  background-color: #ddd;
+  background: #ddd;
 }
- 
-/* ── Footer ── */
+
+/* Footer  */
+
 footer {
-  background-color: #0b1838;
+  background: var(--primary);
   color: #aaa;
+
   text-align: center;
   padding: 16px;
-  font-size: 0.85rem;
   margin-top: 32px;
 }
- 
 
-@media (max-width: 768px) {
-  header {
-    padding: 14px 16px;
-  }
- 
-  main,
-  aside {
-    padding: 0 12px;
-    margin-top: 20px;
-  }
- 
-  section[aria-label="Estadísticas"] {
-    flex-direction: column;
-  }
- 
-  table {
-    font-size: 0.8rem;
-  }
- 
-  th, td {
-    padding: 8px 10px;
-  }
- 
-  form {
-    padding: 16px;
-  }
+/* RESPONSIVE */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
- 
-@media (max-width: 480px) {
-  header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
- 
-  button {
-    width: 100%;
-    margin-right: 0;
-    margin-bottom: 8px;
-  }
+
+.table-container {
+  overflow-x: auto;
+}
+
+/* SUAVIZAR TRANSICIONES*/
+a,
+button,
+input,
+select,
+textarea {
+  transition: all 0.3s ease;
+}
+
+/*SOMBRA SUAVE EN TARJETAS*/
+article,
+form,
+table,
+aside ul {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* EFECTO HOVER TARJETAS -MOVIMIENTO*/
+section[aria-label="Estadísticas"] article:hover {
+  transform: translateY(-3px);
+  transition: 0.3s;
+}
+
+/* SCROLL SUAVE*/
+html {
+  scroll-behavior: smooth;
+}
+
+/*PLACEHOLDER INPUTS */
+::placeholder {
+  color: #999;
+  font-size: 0.85rem;
+}
+
+/* TEXTAREA AJUSTABLE */
+textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* BOTONES MÁS MODERNOs */
+button:hover {
+  opacity: 0.95;
+}
+
+/* FOCUS ACCESIBLE*/
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #F68121;
+  outline-offset: 2px;
+
 }
