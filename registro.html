@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+ <!-- revisado por Abimilet Peralta Grullon - 100081397 -->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Abimilet Peralta Grullon - 100081397" />
   <title>Registro — Sistema de Gestion</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -113,9 +115,36 @@
         </p>
  
         <p>
-          <label for="observaciones">Observaciones</label>
-          <textarea id="observaciones" name="observaciones" rows="3" maxlength="500" placeholder="Notas adicionales…"></textarea>
-          <small>Máximo 500 caracteres.</small>
+                      <label for="observaciones">Observaciones</label>
+
+              <textarea
+                id="observaciones"
+                name="observaciones"
+                rows="3"
+                maxlength="500"
+                placeholder="Notas adicionales…">
+              </textarea>
+
+              <small>
+                Caracteres restantes:
+                <span id="contador">500</span>
+              </small>
+            </p>
+
+            <script>
+
+              const textarea = document.getElementById("observaciones");
+              const contador = document.getElementById("contador");
+
+              textarea.addEventListener("input", function () {
+
+                const restantes = 500 - textarea.value.length;
+
+                contador.textContent = restantes;
+
+              });
+
+            </script> 
         </p>
       </fieldset>
  
