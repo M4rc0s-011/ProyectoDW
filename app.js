@@ -184,7 +184,13 @@ function inicializarFormulario() {
 
     // Datos validos: construir el objeto y persistir
     const registros = obtenerRegistros();
-    const nuevoId = registros.length ? registros[registros.length - 1].id + 1 : 13;
+  if (registros.length === 0) {
+    cuerpoTabla.innerHTML =
+      '<tr><td colspan="5" style="text-align:center; color:#666;">' +
+      'Aún no hay registros. ¡Agrega el primero!</td></tr>';
+    actualizarContadores([]);
+    return;
+  }
 
     const nuevoRegistro = {
       id: nuevoId,
