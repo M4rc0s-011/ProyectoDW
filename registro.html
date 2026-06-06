@@ -7,6 +7,7 @@
   <meta name="author" content="Abimilet Peralta Grullon - 100081397" />
   <title>Registro — Sistema de Gestion</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="app.js" defer></script>
 </head>
 <body>
  
@@ -20,7 +21,10 @@
  
   <main>
     <h2>Registro de Datos</h2>
- 
+
+    <!-- Contenedor para mensajes globales (éxito / error). Se llena dinámicamente con JS -->
+    <div id="form-mensaje" class="form-mensaje" role="alert" aria-live="polite" hidden></div>
+
     <form id="registroForm" novalidate>
  
       <fieldset>
@@ -130,27 +134,11 @@
                 <span id="contador">500</span>
               </small>
             </p>
-
-            <script>
-
-              const textarea = document.getElementById("observaciones");
-              const contador = document.getElementById("contador");
-
-              textarea.addEventListener("input", function () {
-
-                const restantes = 500 - textarea.value.length;
-
-                contador.textContent = restantes;
-
-              });
-
-            </script> 
-        </p>
       </fieldset>
  
       <p>
-        <label>
-          <input type="checkbox" name="consentimiento" required />
+        <label class="checkbox-label">
+          <input type="checkbox" id="consentimiento" name="consentimiento" required />
           Confirmo que los datos son correctos y acepto los <a href="#">Términos de Uso</a>.
         </label>
       </p>

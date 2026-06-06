@@ -6,6 +6,7 @@
   <meta name="author" content="Ismelin Ortiz - 100040939" />
   <title>Dashboard — Sistema de Gestion</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="app.js" defer></script>
 </head>
 <body>
  
@@ -23,19 +24,19 @@
     <section aria-label="Estadísticas">
       <article>
         <h3>Total Registros</h3>
-        <p>1,284</p>
+        <p id="stat-total">1,284</p>
       </article>
       <article>
         <h3>Activos</h3>
-        <p>948</p>
+        <p id="stat-activos">948</p>
       </article>
       <article>
         <h3>Pendientes</h3>
-        <p>67</p>
+        <p id="stat-pendientes">67</p>
       </article>
       <article>
         <h3>Inactivos</h3>
-        <p>269</p>
+        <p id="stat-inactivos">269</p>
       </article>
     </section>
  
@@ -51,7 +52,7 @@
             <th scope="col">Estado</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="tabla-registros">
           <tr>
             <td>#0012</td>
             <td>Ana Martínez</td>
