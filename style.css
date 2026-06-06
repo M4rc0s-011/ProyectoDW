@@ -340,3 +340,47 @@ textarea:focus {
   outline-offset: 2px;
 
 }
+/* ============================================================
+   ETAPA 2 — Estados de validacion y mensajes dinamicos
+   ============================================================ */
+
+/* Campo con error */
+.input-error {
+  border-color: #e23b3b !important;
+  box-shadow: 0 0 0 2px rgba(226, 59, 59, 0.15) !important;
+}
+
+/* Campo valido */
+.input-valido {
+  border-color: #2e9e5b !important;
+  box-shadow: 0 0 0 2px rgba(46, 158, 91, 0.15) !important;
+}
+
+/* Aviso de error debajo del campo */
+.error-msg {
+  color: #e23b3b;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* Banner global de exito / error */
+.form-mensaje {
+  max-width: 680px;
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  margin-bottom: 18px;
+  font-size: 0.9rem;
+  border-left: 4px solid;
+}
+
+.form-mensaje.exito {
+  background: #e8f6ee;
+  color: #1d6b3f;
+  border-left-color: #2e9e5b;
+}
+
+.form-mensaje.error {
+  background: #fdeaea;
+  color: #9c2222;
+  border-left-color: #e23b3b;
+}
