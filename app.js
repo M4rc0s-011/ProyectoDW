@@ -204,16 +204,15 @@ function inicializarFormulario() {
       return;
     }
 
-    // Datos validos: construir el objeto y persistir
+// Datos validos: construir el objeto y persistir
     const registros = obtenerRegistros();
-  if (registros.length === 0) {
-    cuerpoTabla.innerHTML =
-      '<tr><td colspan="5" style="text-align:center; color:#666;">' +
-      'Aún no hay registros. ¡Agrega el primero!</td></tr>';
-    actualizarContadores([]);
-    return;
-  }
-
+    const correoIngresado = document.getElementById("email").value.trim().toLowerCase();
+    const yaExiste = registros.some((r) => r.email.toLowerCase() === correoIngresado);
+    if (yaExiste) {
+      mostrarMensajeGlobal("Ya existe un registro con ese correo electrónico.", "error");
+      return;
+    }
+    const nuevoId = registros.length ? registros[registros.length - 1].id + 1 : 13;
     const nuevoRegistro = {
       id: nuevoId,
       nombre: document.getElementById("nombre").value.trim(),
