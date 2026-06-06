@@ -1,20 +1,11 @@
-/* ============================================================
-   Sistema de Gestion — Etapa 2: Interactividad (JavaScript)
-   Autor: equipo ProyectoDW
-   - Validaciones en tiempo real del formulario
-   - Manipulacion del DOM para mensajes dinamicos (sin recargar)
-   - Persistencia temporal con localStorage (arreglo de objetos)
-   ============================================================ */
+
 
 "use strict";
 
 /* Clave unica bajo la que se guardan los registros en el navegador */
 const CLAVE_ALMACEN = "registros_sistema_gestion";
 
-/* ------------------------------------------------------------
-   1) UTILIDADES DE ALMACENAMIENTO (localStorage)
-   Los registros se guardan como un arreglo de objetos.
-   ------------------------------------------------------------ */
+
 
 function obtenerRegistros() {
   try {
@@ -30,11 +21,7 @@ function guardarRegistros(registros) {
   localStorage.setItem(CLAVE_ALMACEN, JSON.stringify(registros));
 }
 
-/* ------------------------------------------------------------
-   2) REGLAS DE VALIDACION
-   Cada campo declara sus reglas de forma modular para no
-   duplicar logica. 'requerido', longitud minima y patron regex.
-   ------------------------------------------------------------ */
+
 
 const SOLO_LETRAS = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
 const PATRON_CEDULA = /^\d{3}-?\d{7}-?\d{1}$/;
@@ -51,10 +38,7 @@ const REGLAS = {
   categoria: { requerido: true }
 };
 
-/* ------------------------------------------------------------
-   3) MANIPULACION DEL DOM: mensajes de error por campo
-   El <small> de error se crea dinamicamente debajo del input.
-   ------------------------------------------------------------ */
+
 
 function mostrarError(campo, mensaje) {
   campo.classList.add("input-error");
@@ -86,10 +70,6 @@ function limpiarEstado(campo) {
   if (aviso) aviso.remove();
 }
 
-/* ------------------------------------------------------------
-   4) VALIDACION DE UN CAMPO INDIVIDUAL
-   Devuelve true si es valido, false si no. Pinta el estado.
-   ------------------------------------------------------------ */
 
 function validarCampo(campo) {
   const regla = REGLAS[campo.id];
@@ -135,9 +115,6 @@ function validarConsentimiento(checkbox) {
   return true;
 }
 
-/* ------------------------------------------------------------
-   5) MENSAJE GLOBAL (banner de exito o error)
-   ------------------------------------------------------------ */
 
 function mostrarMensajeGlobal(texto, tipo) {
   const caja = document.getElementById("form-mensaje");
@@ -149,9 +126,6 @@ function mostrarMensajeGlobal(texto, tipo) {
   caja.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
-/* ------------------------------------------------------------
-   6) INICIALIZACION DEL FORMULARIO (pagina registro.html)
-   ------------------------------------------------------------ */
 
 function inicializarFormulario() {
   const formulario = document.getElementById("registroForm");
@@ -245,10 +219,6 @@ function inicializarFormulario() {
   });
 }
 
-/* ------------------------------------------------------------
-   7) RENDER DEL DASHBOARD (pagina index.html)
-   Lee localStorage y reconstruye la tabla y los contadores.
-   ------------------------------------------------------------ */
 
 function inicializarDashboard() {
   const cuerpoTabla = document.getElementById("tabla-registros");
@@ -293,9 +263,6 @@ function actualizarContadores(registros) {
   fijarTexto("stat-inactivos", inactivos);
 }
 
-/* ------------------------------------------------------------
-   8) FUNCIONES AUXILIARES
-   ------------------------------------------------------------ */
 
 function fijarTexto(id, valor) {
   const elemento = document.getElementById(id);
@@ -321,9 +288,7 @@ function escaparHtml(texto) {
   return div.innerHTML;
 }
 
-/* ------------------------------------------------------------
-   9) PUNTO DE ENTRADA
-   ------------------------------------------------------------ */
+
 
 document.addEventListener("DOMContentLoaded", () => {
   inicializarFormulario();
