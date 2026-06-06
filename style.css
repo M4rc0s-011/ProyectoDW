@@ -340,21 +340,59 @@ textarea:focus {
   outline-offset: 2px;
 
 }
+/* ============================================================
+   ETAPA 2 — Estados de validacion y mensajes dinamicos
+   ============================================================ */
 
-#errorNombre {
-  display: block;
-  font-size: 0.8rem;
-  margin-top: 4px;
+/* Campo con error */
+.input-error {
+  border-color: #e23b3b !important;
+  box-shadow: 0 0 0 2px rgba(226, 59, 59, 0.15) !important;
 }
 
-.exito {
-  color: green;
+/* Campo valido */
+.input-valido {
+  border-color: #2e9e5b !important;
+  box-shadow: 0 0 0 2px rgba(46, 158, 91, 0.15) !important;
 }
 
-.error {
-  color: red;
+/* Aviso de error debajo del campo */
+.error-msg {
+  color: #e23b3b;
+  font-size: 0.78rem;
+  font-weight: 600;
 }
-#mensajeFormulario {
-  margin: 10px 0;
-  font-weight: bold;
+
+/* Banner global de exito / error */
+.form-mensaje {
+  max-width: 680px;
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  margin-bottom: 18px;
+  font-size: 0.9rem;
+  border-left: 4px solid;
 }
+
+.form-mensaje.exito {
+  background: #e8f6ee;
+  color: #1d6b3f;
+  border-left-color: #2e9e5b;
+}
+
+.form-mensaje.error {
+  background: #fdeaea;
+  color: #9c2222;
+  border-left-color: #e23b3b;
+}
+
+/* Pildora de color segun el estado del registro */
+.estado {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.estado-activo    { background: #e8f6ee; color: #1d6b3f; }
+.estado-pendiente { background: #fff3e0; color: #9c5a18; }
+.estado-inactivo  { background: #eee;    color: #666;    }
