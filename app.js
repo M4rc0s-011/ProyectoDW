@@ -271,7 +271,8 @@ function fijarTexto(id, valor) {
 
 function etiquetaEstado(estado) {
   const mapa = { activo: "Activo", inactivo: "Inactivo", pendiente: "Pendiente" };
-  return mapa[estado] || estado;
+  const texto = mapa[estado] || estado;
+  return '<span class="estado estado-' + estado + '">' + texto + '</span>';
 }
 
 function formatearFecha(fecha) {

@@ -384,3 +384,15 @@ textarea:focus {
   color: #9c2222;
   border-left-color: #e23b3b;
 }
+
+/* Pildora de color segun el estado del registro */
+.estado {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.estado-activo    { background: #e8f6ee; color: #1d6b3f; }
+.estado-pendiente { background: #fff3e0; color: #9c5a18; }
+.estado-inactivo  { background: #eee;    color: #666;    }
