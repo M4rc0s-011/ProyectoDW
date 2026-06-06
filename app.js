@@ -115,6 +115,26 @@ function validarConsentimiento(checkbox) {
   return true;
 }
 
+/* Valida que la fecha de nacimiento sea de una persona mayor de 18 anios */
+function validarEdad(campoFecha) {
+  const valor = campoFecha.value;
+  if (valor === "") return true; // es opcional: vacio se permite
+
+  const nacimiento = new Date(valor);
+  const hoy = new Date();
+  let edad = hoy.getFullYear() - nacimiento.getFullYear();
+  const mes = hoy.getMonth() - nacimiento.getMonth();
+  if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+    edad--;
+  }
+
+  if (edad < 18) {
+    mostrarError(campoFecha, "Debes ser mayor de 18 anios.");
+    return false;
+  }
+  marcarValido(campoFecha);
+  return true;
+}
 
 function mostrarMensajeGlobal(texto, tipo) {
   const caja = document.getElementById("form-mensaje");
@@ -175,6 +195,8 @@ function inicializarFormulario() {
     });
     if (consentimiento && !validarConsentimiento(consentimiento)) todoValido = false;
 
+    const fechaNac = document.getElementById("fecha_nacimiento");
+    if (fechaNac && !validarEdad(fechaNac)) todoValido = false;
     if (!todoValido) {
       mostrarMensajeGlobal("Revisa los campos marcados en rojo antes de continuar.", "error");
       const primerError = formulario.querySelector(".input-error");
