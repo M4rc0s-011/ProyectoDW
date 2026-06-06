@@ -340,3 +340,21 @@ textarea:focus {
   outline-offset: 2px;
 
 }
+
+#errorNombre {
+  display: block;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.exito {
+  color: green;
+}
+
+.error {
+  color: red;
+}
+#mensajeFormulario {
+  margin: 10px 0;
+  font-weight: bold;
+}

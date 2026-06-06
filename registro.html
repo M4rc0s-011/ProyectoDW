@@ -27,11 +27,13 @@
         <p>
           <label for="nombre">Nombre <abbr title="requerido">*</abbr></label>
           <input type="text" id="nombre" name="nombre" placeholder="Ej: Ana" required autocomplete="given-name" />
+          <small id="errorNombre"></small>
         </p>
  
         <p>
           <label for="apellido">Apellido <abbr title="requerido">*</abbr></label>
           <input type="text" id="apellido" name="apellido" placeholder="Ej: Martínez" required autocomplete="family-name" />
+          <small id="errorApellido"></small>
         </p>
  
         <p>
@@ -79,6 +81,7 @@
         <p>
           <label for="email">Correo Electrónico <abbr title="requerido">*</abbr></label>
           <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" required autocomplete="email" />
+          <small id="errorEmail"></small>
         </p>
  
         <p>
@@ -126,11 +129,15 @@
         </label>
       </p>
  
+      <p id="mensajeFormulario"></p>
       <p>
         <button type="reset">Limpiar</button>
         <button type="submit">Guardar Registro</button>
       </p>
- 
+      
+      <p id="mensajeFormulario"></p>
+
+
     </form>
   </main>
  
@@ -138,6 +145,9 @@
     <p>© 2026 Sistema de Gestion — Etapa 1</p>
   </footer>
  
+  <script src="script.js"></script>
+  
+
 </body>
 </html>
  
