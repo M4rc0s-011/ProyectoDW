@@ -21,7 +21,7 @@ app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 app.use("/api/auth", authLimiter, authRoutes);
 app.use("/api/recursos", recursoRoutes);
 app.use("/api/usuarios", usuariosRoutes);
-
+app.use('/api/admin/usuarios', require('./routes/admin.routes'));
 app.use(notFound);
 app.use(errorHandler);
 
