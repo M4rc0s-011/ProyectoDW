@@ -2,50 +2,43 @@
 
 "use strict";
 
-/* Clave unica bajo la que se guardan los registros en el navegador */
-const CLAVE_ALMACEN = "registros_sistema_gestion";
-
 
 
 async function obtenerRegistros() {
-  try {
-    const token = localStorage.getItem("token"); // JWT de login
-
-    const response = await fetch("http://localhost:3000/api/recurso", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error("Error al obtener registros");
-    }
-
-    const data = await response.json();
-    return data.data;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
+ const token = localStorage.getItem("token");
+  const res = await fetch("http://localhost:4000/api/admin/usuarios", {
+     headers: { "Authorization": "Bearer " + token }
+      });
+      const data = await res.json();
+       if (!res.ok) throw new Error(data.message);
+       return data.data; // arreglo de usuarios
 }
+
+
+
 
 async function guardarRegistro(registro) {
   try {
     const token = localStorage.getItem("token");
 
-    const response = await fetch("http://localhost:3000/api/recurso", {
+    const response = await fetch("http://localhost:4000/api/recurso", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
+        "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify(registro)
     });
 
-    return await response.json();
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Error al guardar registro");
+    }
+
+    return data;
   } catch (error) {
-    console.error(error);
+    console.error("Error:", error);
   }
 }
 
@@ -212,7 +205,7 @@ function inicializarFormulario() {
   }
 
   // Envio del formulario
-  EventListener("submit", (evento) => {
+  formulario.addEventListener("submit", async (evento) => {
     evento.preventDefault(); // nunca recargar la pagina
 
     // Valida todos los campos y junta el resultado
@@ -231,18 +224,10 @@ function inicializarFormulario() {
       return;
     }
 
-    // Datos validos: construir el objeto y persistir
-   const registros = await obtenerRegistros();
-  if (registros.length === 0) {
-    cuerpoTabla.innerHTML =
-      '<tr><td colspan="5" style="text-align:center; color:#666;">' +
-      'Aún no hay registros. ¡Agrega el primero!</td></tr>';
-    actualizarContadores([]);
-    return;
-  }
+
 
     const nuevoRegistro = {
-      id: nuevoId,
+      
       nombre: document.getElementById("nombre").value.trim(),
       apellido: document.getElementById("apellido").value.trim(),
       cedula: document.getElementById("cedula").value.trim(),
@@ -252,13 +237,13 @@ function inicializarFormulario() {
       fecha: formatearFecha(new Date())
     };
 
-    registros.push(nuevoRegistro);
-    guardarRegistros(registros);
+  
+    await guardarRegistro(nuevoRegistro);
 
-    mostrarMensajeGlobal(
-      "Registro guardado correctamente. Total acumulado: <strong>" + registros.length + "</strong>.",
-      "exito"
-    );
+   mostrarMensajeGlobal(
+  "Registro guardado correctamente.",
+  "exito"
+);
 
     // Limpiar formulario y estados visuales
     formulario.reset();
@@ -275,7 +260,7 @@ function inicializarFormulario() {
 }
 
 
-function inicializarDashboard() {
+async function inicializarDashboard() {
   const cuerpoTabla = document.getElementById("tabla-registros");
   if (!cuerpoTabla) return; // no estamos en index.html
 
