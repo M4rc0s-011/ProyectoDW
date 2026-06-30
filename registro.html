@@ -115,42 +115,15 @@
         </p>
  
         <p>
-                      <label for="observaciones">Observaciones</label>
-
-              <textarea
-                id="observaciones"
-                name="observaciones"
-                rows="3"
-                maxlength="500"
-                placeholder="Notas adicionales…">
-              </textarea>
-
-              <small>
-                Caracteres restantes:
-                <span id="contador">500</span>
-              </small>
-            </p>
-
-            <script>
-
-              const textarea = document.getElementById("observaciones");
-              const contador = document.getElementById("contador");
-
-              textarea.addEventListener("input", function () {
-
-                const restantes = 500 - textarea.value.length;
-
-                contador.textContent = restantes;
-
-              });
-
-            </script> 
+          <label for="observaciones">Observaciones</label>
+          <textarea id="observaciones" name="observaciones" rows="3" maxlength="500" placeholder="Notas adicionales…"></textarea>
+          <small>Caracteres restantes: <span id="contador">500</span></small>
         </p>
       </fieldset>
  
       <p>
         <label>
-          <input type="checkbox" name="consentimiento" required />
+          <input type="checkbox" id="consentimiento" name="consentimiento" required />
           Confirmo que los datos son correctos y acepto los <a href="#">Términos de Uso</a>.
         </label>
       </p>
@@ -167,6 +140,6 @@
     <p>© 2026 Sistema de Gestion — Etapa 1</p>
   </footer>
  
+  <script src="app.js"></script>
 </body>
 </html>
- 
