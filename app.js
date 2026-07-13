@@ -2,8 +2,6 @@
 
 "use strict";
 
-
-
 async function obtenerRegistros() {
  const token = localStorage.getItem("token");
   const res = await fetch("http://localhost:4000/api/registros", {
@@ -13,10 +11,6 @@ async function obtenerRegistros() {
        if (!res.ok) throw new Error(data.message);
        return data.data; // arreglo de usuarios
 }
-
-
-
-
 async function guardarRegistro(registro) {
   try {
     const token = localStorage.getItem("token");
@@ -41,7 +35,29 @@ async function guardarRegistro(registro) {
     console.error("Error:", error);
   }
 }
-
+async function eliminarRegistro(id) {
+  if (!confirm("Seguro que quieres eliminar este registro?")) return;
+  const res = await fetch("/api/registros/" + id, { method: "DELETE" });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message);
+  await inicializarDashboard(); // repinta la tabla y los contadores
+}
+async function obtenerRegistro(id) {
+  const res = await fetch("/api/registros/" + id);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message);
+  return data.data;
+}
+async function actualizarRegistro(id, registro) {
+  const res = await fetch("/api/registros/" + id, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(registro)
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message);
+  return data;
+}
 
 const SOLO_LETRAS = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
 const PATRON_CEDULA = /^\d{3}-?\d{7}-?\d{1}$/;
@@ -57,8 +73,6 @@ const REGLAS = {
   estado:    { requerido: true },
   categoria: { requerido: true }
 };
-
-
 
 function mostrarError(campo, mensaje) {
   campo.classList.add("input-error");
@@ -171,6 +185,18 @@ function inicializarFormulario() {
   const formulario = document.getElementById("registroForm");
   if (!formulario) return; // no estamos en registro.html
 
+  const idEdicion = new URLSearchParams(window.location.search).get("id");
+  if (idEdicion) {
+  obtenerRegistro(idEdicion).then((reg) => {
+    document.getElementById("nombre").value = reg.nombre || "";
+    document.getElementById("apellido").value = reg.apellido || "";
+    document.getElementById("cedula").value = reg.cedula || "";
+    document.getElementById("email").value = reg.email || "";
+    document.getElementById("telefono").value = reg.telefono || "";
+    document.getElementById("categoria").value = reg.categoria || "";
+    document.getElementById("estado").value = reg.estado || "";
+    });
+  }
   // Campos que tienen reglas de validacion
   const camposValidables = Object.keys(REGLAS)
     .map((id) => document.getElementById(id))
@@ -223,9 +249,6 @@ function inicializarFormulario() {
       if (primerError) primerError.focus();
       return;
     }
-
-
-
     const nuevoRegistro = {
       
       nombre: document.getElementById("nombre").value.trim(),
@@ -236,14 +259,15 @@ function inicializarFormulario() {
       estado: document.getElementById("estado").value,
       fecha: formatearFecha(new Date())
     };
-
-  
-    await guardarRegistro(nuevoRegistro);
-
-   mostrarMensajeGlobal(
-  "Registro guardado correctamente.",
-  "exito"
-);
+  if (idEdicion) {
+  await actualizarRegistro(idEdicion, nuevoRegistro);
+  } else {
+  await guardarRegistro(nuevoRegistro);
+  }
+    mostrarMensajeGlobal(
+    "Registro guardado correctamente.",
+    "exito"
+  );
 
     // Limpiar formulario y estados visuales
     formulario.reset();
@@ -269,25 +293,33 @@ async function inicializarDashboard() {
 
   // Construir filas (mas recientes primero)
   const filas = registros
-    .slice()
-    .reverse()
-    .map((reg) => {
-      const idFormateado = "#" + String(reg.id).padStart(4, "0");
-      const nombreCompleto = escaparHtml(reg.nombre + " " + reg.apellido);
-      return (
-        "<tr>" +
-        "<td>" + idFormateado + "</td>" +
-        "<td>" + nombreCompleto + "</td>" +
-        "<td>Tipo " + escaparHtml(reg.categoria) + "</td>" +
-        "<td>" + reg.fecha + "</td>" +
-        "<td>" + etiquetaEstado(reg.estado) + "</td>" +
-        "</tr>"
-      );
-    })
-    .join("");
+  .slice()
+  .reverse()
+  .map((reg) => {
+    const idFormateado = "#" + String(reg.id).padStart(4, "0");
+    const nombreCompleto = escaparHtml(reg.nombre + " " + reg.apellido);
+    return (
+      "<tr>" +
+      "<td>" + idFormateado + "</td>" +
+      "<td>" + nombreCompleto + "</td>" +
+      "<td>Tipo " + escaparHtml(reg.categoria) + "</td>" +
+      "<td>" + reg.fecha + "</td>" +
+      "<td>" + etiquetaEstado(reg.estado) + "</td>" +
+      "<td>" +
+        "<a class='btn btn-sm btn-outline-primary me-1' href='registro.html?id=" + reg.id
++ "'>Editar</a>" +
+        "<button class='btn btn-sm btn-outline-danger btn-eliminar' data-id='" + reg.id +
+"'>Eliminar</button>" +
+      "</td>" +
+      "</tr>"
+    );
+  })
+  .join("");
 
   cuerpoTabla.innerHTML = filas; // reemplaza los datos demo por los reales
-
+  cuerpoTabla.querySelectorAll(".btn-eliminar").forEach((btn) => {
+  btn.addEventListener("click", () => eliminarRegistro(btn.dataset.id));
+  });
   actualizarContadores(registros);
 }
 
