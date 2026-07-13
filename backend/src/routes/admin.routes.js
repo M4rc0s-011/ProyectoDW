@@ -1,9 +1,11 @@
+// CRUD de registros. Protegido con requireAuth a nivel de mount en app.js
+// (app.use("/api/registros", requireAuth, ...)), por eso no se repite aqui en cada ruta.
 const { Router } = require("express");
 const { pool } = require("../db");
 
 const router = Router();
 
-// GET /api/registros -> listar todos
+// GET /api/registros -> listar todos, mas recientes primero
 router.get("/", async (req, res, next) => {
   try {
     const [rows] = await pool.query("SELECT * FROM registros ORDER BY id DESC");
@@ -11,7 +13,7 @@ router.get("/", async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// GET /api/registros/:id -> detalle
+// GET /api/registros/:id -> detalle de un registro puntual
 router.get("/:id", async (req, res, next) => {
   try {
     const [rows] = await pool.query("SELECT * FROM registros WHERE id = ?", [req.params.id]);
@@ -20,7 +22,7 @@ router.get("/:id", async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// POST /api/registros -> crear
+// POST /api/registros -> crear un registro nuevo
 router.post("/", async (req, res, next) => {
   try {
     const { nombre, apellido, cedula, email, telefono, categoria, estado, fecha } = req.body;
@@ -35,7 +37,7 @@ router.post("/", async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// PUT /api/registros/:id -> actualizar
+// PUT /api/registros/:id -> actualizar un registro existente
 router.put("/:id", async (req, res, next) => {
   try {
     const { nombre, apellido, cedula, email, telefono, categoria, estado, fecha } = req.body;
@@ -48,7 +50,7 @@ router.put("/:id", async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// DELETE /api/registros/:id -> eliminar
+// DELETE /api/registros/:id -> eliminar un registro
 router.delete("/:id", async (req, res, next) => {
   try {
     const [r] = await pool.query("DELETE FROM registros WHERE id = ?", [req.params.id]);

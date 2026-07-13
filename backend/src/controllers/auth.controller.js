@@ -2,6 +2,7 @@
 const jwt = require("jsonwebtoken");
 const { pool } = require("../db");
 
+// Crea un usuario nuevo (valida email duplicado y guarda el password ya encriptado).
 async function register(req, res, next) {
   try {
     const { nombre, email, password } = req.body;
@@ -23,6 +24,7 @@ async function register(req, res, next) {
   }
 }
 
+// Valida credenciales contra la tabla usuarios y devuelve un token JWT (auth basada en token).
 async function login(req, res, next) {
   try {
     const { email, password } = req.body;

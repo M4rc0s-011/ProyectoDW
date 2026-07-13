@@ -1,7 +1,8 @@
-
-
 "use strict";
 
+// --- Sesion (Ismelin) ---
+
+// Envia email/password al backend; si es correcto, guarda la sesion (cookie) y va al dashboard.
 async function iniciarSesion(email, password) {
   const res = await fetch("/api/session/login", {
     method: "POST",
@@ -13,17 +14,20 @@ async function iniciarSesion(email, password) {
   window.location.href = "index.html";
 }
 
+// Cierra la sesion en el backend y vuelve a la pantalla de login.
 async function cerrarSesion() {
   await fetch("/api/session/logout", { method: "POST" });
   window.location.href = "login.html";
 }
 
+// Verifica si hay una sesion activa; si no la hay, redirige al login y devuelve false.
 async function protegerPagina() {
   const res = await fetch("/api/session/me");
   if (!res.ok) { window.location.href = "login.html"; return false; }
   return true;
 }
 
+// Conecta el formulario de login.html con iniciarSesion() y muestra errores si falla.
 function inicializarLogin() {
   const form = document.getElementById("login-form");
   if (!form) return; // no estamos en login.html
@@ -41,31 +45,29 @@ function inicializarLogin() {
   });
 }
 
+// Conecta el boton "Cerrar sesion" de la navbar con cerrarSesion().
 function inicializarLogout() {
   const btn = document.getElementById("btn-logout");
   if (!btn) return; // esta pagina no tiene el boton
   btn.addEventListener("click", cerrarSesion);
 }
 
+// --- CRUD de registros ---
+
+// Pide al backend la lista completa de registros (requiere sesion activa).
 async function obtenerRegistros() {
- const token = localStorage.getItem("token");
-  const res = await fetch("http://localhost:4000/api/registros", {
-     headers: { "Authorization": "Bearer " + token }
-      });
-      const data = await res.json();
-       if (!res.ok) throw new Error(data.message);
-       return data.data; // arreglo de usuarios
+  const res = await fetch("/api/registros");
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message);
+  return data.data;
 }
+
+// Envia un registro nuevo al backend para guardarlo (POST).
 async function guardarRegistro(registro) {
   try {
-    const token = localStorage.getItem("token");
-
-    const response = await fetch("http://localhost:4000/api/registros", {
+    const response = await fetch("/api/registros", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(registro)
     });
 
@@ -80,6 +82,8 @@ async function guardarRegistro(registro) {
     console.error("Error:", error);
   }
 }
+
+// Pide confirmacion y elimina un registro por id; luego repinta el dashboard.
 async function eliminarRegistro(id) {
   if (!confirm("Seguro que quieres eliminar este registro?")) return;
   const res = await fetch("/api/registros/" + id, { method: "DELETE" });
@@ -87,12 +91,16 @@ async function eliminarRegistro(id) {
   if (!res.ok) throw new Error(data.message);
   await inicializarDashboard(); // repinta la tabla y los contadores
 }
+
+// Trae los datos de un registro puntual por id (usado en el modo edicion).
 async function obtenerRegistro(id) {
   const res = await fetch("/api/registros/" + id);
   const data = await res.json();
   if (!res.ok) throw new Error(data.message);
   return data.data;
 }
+
+// Envia los cambios de un registro existente al backend (PUT).
 async function actualizarRegistro(id, registro) {
   const res = await fetch("/api/registros/" + id, {
     method: "PUT",
@@ -104,11 +112,14 @@ async function actualizarRegistro(id, registro) {
   return data;
 }
 
+// --- Validacion del formulario ---
+
 const SOLO_LETRAS = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
 const PATRON_CEDULA = /^\d{3}-?\d{7}-?\d{1}$/;
 const PATRON_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PATRON_TELEFONO = /^(809|829|849)-?\d{3}-?\d{4}$/;
 
+// Reglas de validacion por campo: requerido, longitud minima y patron esperado.
 const REGLAS = {
   nombre:    { requerido: true,  min: 2, patron: SOLO_LETRAS,    msgPatron: "Solo se permiten letras." },
   apellido:  { requerido: true,  min: 2, patron: SOLO_LETRAS,    msgPatron: "Solo se permiten letras." },
@@ -119,6 +130,7 @@ const REGLAS = {
   categoria: { requerido: true }
 };
 
+// Marca un campo como invalido y muestra su mensaje de error debajo.
 function mostrarError(campo, mensaje) {
   campo.classList.add("input-error");
   campo.classList.remove("input-valido");
@@ -135,6 +147,7 @@ function mostrarError(campo, mensaje) {
   aviso.textContent = mensaje;
 }
 
+// Marca un campo como valido y quita su mensaje de error si tenia.
 function marcarValido(campo) {
   campo.classList.remove("input-error");
   campo.classList.add("input-valido");
@@ -143,13 +156,14 @@ function marcarValido(campo) {
   if (aviso) aviso.remove();
 }
 
+// Quita cualquier estado visual (valido/invalido) de un campo.
 function limpiarEstado(campo) {
   campo.classList.remove("input-error", "input-valido");
   const aviso = document.getElementById("error-" + campo.id);
   if (aviso) aviso.remove();
 }
 
-
+// Valida un campo segun sus REGLAS (obligatorio, longitud, patron) y marca el resultado.
 function validarCampo(campo) {
   const regla = REGLAS[campo.id];
   if (!regla) return true; // campo sin reglas: siempre valido
@@ -215,6 +229,7 @@ function validarEdad(campoFecha) {
   return true;
 }
 
+// Muestra un mensaje (exito/error) en la parte superior del formulario.
 function mostrarMensajeGlobal(texto, tipo) {
   const caja = document.getElementById("form-mensaje");
   if (!caja) return;
@@ -225,11 +240,12 @@ function mostrarMensajeGlobal(texto, tipo) {
   caja.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
-
+// Configura el formulario de registro.html: validacion, modo edicion (?id=) y envio (crear o actualizar).
 function inicializarFormulario() {
   const formulario = document.getElementById("registroForm");
   if (!formulario) return; // no estamos en registro.html
 
+  // Modo edicion: si la URL trae ?id=N, cargamos ese registro en el formulario
   const idEdicion = new URLSearchParams(window.location.search).get("id");
   if (idEdicion) {
   obtenerRegistro(idEdicion).then((reg) => {
@@ -295,7 +311,7 @@ function inicializarFormulario() {
       return;
     }
     const nuevoRegistro = {
-      
+
       nombre: document.getElementById("nombre").value.trim(),
       apellido: document.getElementById("apellido").value.trim(),
       cedula: document.getElementById("cedula").value.trim(),
@@ -304,6 +320,7 @@ function inicializarFormulario() {
       estado: document.getElementById("estado").value,
       fecha: formatearFecha(new Date())
     };
+  // Si venimos en modo edicion hacemos PUT; si no, POST (crear nuevo)
   if (idEdicion) {
   await actualizarRegistro(idEdicion, nuevoRegistro);
   } else {
@@ -328,7 +345,7 @@ function inicializarFormulario() {
   });
 }
 
-
+// Carga los registros del backend y pinta la tabla del dashboard (index.html) con sus botones de accion.
 async function inicializarDashboard() {
   const cuerpoTabla = document.getElementById("tabla-registros");
   if (!cuerpoTabla) return; // no estamos en index.html
@@ -362,12 +379,15 @@ async function inicializarDashboard() {
   .join("");
 
   cuerpoTabla.innerHTML = filas; // reemplaza los datos demo por los reales
+
+  // Conecta cada boton "Eliminar" recien pintado con eliminarRegistro()
   cuerpoTabla.querySelectorAll(".btn-eliminar").forEach((btn) => {
   btn.addEventListener("click", () => eliminarRegistro(btn.dataset.id));
   });
   actualizarContadores(registros);
 }
 
+// Cuenta los registros por estado y actualiza las tarjetas de estadisticas del dashboard.
 function actualizarContadores(registros) {
   const total = registros.length;
   const activos = registros.filter((r) => r.estado === "activo").length;
@@ -380,18 +400,20 @@ function actualizarContadores(registros) {
   fijarTexto("stat-inactivos", inactivos);
 }
 
-
+// Escribe un texto en el elemento con ese id, si existe.
 function fijarTexto(id, valor) {
   const elemento = document.getElementById(id);
   if (elemento) elemento.textContent = valor;
 }
 
+// Convierte el estado ("activo"/"inactivo"/"pendiente") en una etiqueta HTML con su clase de color.
 function etiquetaEstado(estado) {
   const mapa = { activo: "Activo", inactivo: "Inactivo", pendiente: "Pendiente" };
   const texto = mapa[estado] || estado;
   return '<span class="estado estado-' + estado + '">' + texto + '</span>';
 }
 
+// Formatea una fecha JS al formato AAAA-MM-DD que espera MySQL.
 function formatearFecha(fecha) {
   const dia = String(fecha.getDate()).padStart(2, "0");
   const mes = String(fecha.getMonth() + 1).padStart(2, "0");
@@ -406,7 +428,7 @@ function escaparHtml(texto) {
   return div.innerHTML;
 }
 
-
+// Punto de entrada: al cargar cualquier pagina, activa login, protege rutas privadas, y arranca formulario/dashboard.
 document.addEventListener("DOMContentLoaded", async () => {
 inicializarLogin();
 // Paginas privadas: dashboard y registro
@@ -420,4 +442,3 @@ inicializarLogout();
 inicializarFormulario();
 inicializarDashboard();
 });
-
