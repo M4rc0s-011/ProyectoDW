@@ -11,7 +11,16 @@ const { notFound, errorHandler } = require("./middlewares/error");
 
 const app = express();
 
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
+      styleSrc: ["'self'", "https://cdn.jsdelivr.net", "'unsafe-inline'"],
+      connectSrc: ["'self'", "https://cdn.jsdelivr.net"],
+    },
+  },
+}));
 app.use(cors({ origin: process.env.CORS_ORIGIN || "*" }));
 app.use(express.json());
 
