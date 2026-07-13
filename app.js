@@ -2,7 +2,46 @@
 
 "use strict";
 
-
+async function iniciarSesion(email, password) {
+const res = await fetch("/api/session/login", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({ email, password })
+});
+const data = await res.json();
+if (!res.ok) throw new Error(data.message);
+window.location.href = "index.html";
+}
+async function cerrarSesion() {
+await fetch("/api/session/logout", { method: "POST" });
+window.location.href = "login.html";
+}
+async function protegerPagina() {
+const res = await fetch("/api/session/me");
+if (!res.ok) { window.location.href = "login.html"; return false; }
+return true;
+}
+function inicializarLogin() {
+const form = document.getElementById("login-form");
+if (!form) return; // no estamos en login.html
+form.addEventListener("submit", async (e) => {
+e.preventDefault();
+const email = document.getElementById("login-email").value.trim();
+const password = document.getElementById("login-password").value;
+const aviso = document.getElementById("login-error");
+try {
+await iniciarSesion(email, password);
+} catch (err) {
+aviso.textContent = err.message;
+aviso.classList.remove("d-none");
+}
+});
+}
+function inicializarLogout() {
+const btn = document.getElementById("btn-logout");
+if (!btn) return; // esta pagina no tiene el boton
+btn.addEventListener("click", cerrarSesion);
+}
 
 async function obtenerRegistros() {
  const token = localStorage.getItem("token");
@@ -335,3 +374,17 @@ document.addEventListener("DOMContentLoaded", () => {
   inicializarFormulario();
   inicializarDashboard();
 });
+document.addEventListener("DOMContentLoaded", async () => {
+inicializarLogin();
+// Paginas privadas: dashboard y registro
+const esPrivada = document.getElementById("tabla-registros") ||
+document.getElementById("registroForm");
+if (esPrivada) {
+const ok = await protegerPagina();
+if (!ok) return; // sin sesion: ya redirigio al login
+}
+inicializarLogout();
+inicializarFormulario();
+inicializarDashboard();
+});
+
