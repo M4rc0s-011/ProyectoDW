@@ -3,44 +3,48 @@
 "use strict";
 
 async function iniciarSesion(email, password) {
-const res = await fetch("/api/session/login", {
-method: "POST",
-headers: { "Content-Type": "application/json" },
-body: JSON.stringify({ email, password })
-});
-const data = await res.json();
-if (!res.ok) throw new Error(data.message);
-window.location.href = "index.html";
+  const res = await fetch("/api/session/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message);
+  window.location.href = "index.html";
 }
+
 async function cerrarSesion() {
-await fetch("/api/session/logout", { method: "POST" });
-window.location.href = "login.html";
+  await fetch("/api/session/logout", { method: "POST" });
+  window.location.href = "login.html";
 }
+
 async function protegerPagina() {
-const res = await fetch("/api/session/me");
-if (!res.ok) { window.location.href = "login.html"; return false; }
-return true;
+  const res = await fetch("/api/session/me");
+  if (!res.ok) { window.location.href = "login.html"; return false; }
+  return true;
 }
+
 function inicializarLogin() {
-const form = document.getElementById("login-form");
-if (!form) return; // no estamos en login.html
-form.addEventListener("submit", async (e) => {
-e.preventDefault();
-const email = document.getElementById("login-email").value.trim();
-const password = document.getElementById("login-password").value;
-const aviso = document.getElementById("login-error");
-try {
-await iniciarSesion(email, password);
-} catch (err) {
-aviso.textContent = err.message;
-aviso.classList.remove("d-none");
+  const form = document.getElementById("login-form");
+  if (!form) return; // no estamos en login.html
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value;
+    const aviso = document.getElementById("login-error");
+    try {
+      await iniciarSesion(email, password);
+    } catch (err) {
+      aviso.textContent = err.message;
+      aviso.classList.remove("d-none");
+    }
+  });
 }
-});
-}
+
 function inicializarLogout() {
-const btn = document.getElementById("btn-logout");
-if (!btn) return; // esta pagina no tiene el boton
-btn.addEventListener("click", cerrarSesion);
+  const btn = document.getElementById("btn-logout");
+  if (!btn) return; // esta pagina no tiene el boton
+  btn.addEventListener("click", cerrarSesion);
 }
 
 async function obtenerRegistros() {
@@ -52,10 +56,6 @@ async function obtenerRegistros() {
        if (!res.ok) throw new Error(data.message);
        return data.data; // arreglo de usuarios
 }
-
-
-
-
 async function guardarRegistro(registro) {
   try {
     const token = localStorage.getItem("token");
@@ -80,7 +80,29 @@ async function guardarRegistro(registro) {
     console.error("Error:", error);
   }
 }
-
+async function eliminarRegistro(id) {
+  if (!confirm("Seguro que quieres eliminar este registro?")) return;
+  const res = await fetch("/api/registros/" + id, { method: "DELETE" });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message);
+  await inicializarDashboard(); // repinta la tabla y los contadores
+}
+async function obtenerRegistro(id) {
+  const res = await fetch("/api/registros/" + id);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message);
+  return data.data;
+}
+async function actualizarRegistro(id, registro) {
+  const res = await fetch("/api/registros/" + id, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(registro)
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message);
+  return data;
+}
 
 const SOLO_LETRAS = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
 const PATRON_CEDULA = /^\d{3}-?\d{7}-?\d{1}$/;
@@ -96,8 +118,6 @@ const REGLAS = {
   estado:    { requerido: true },
   categoria: { requerido: true }
 };
-
-
 
 function mostrarError(campo, mensaje) {
   campo.classList.add("input-error");
@@ -210,6 +230,18 @@ function inicializarFormulario() {
   const formulario = document.getElementById("registroForm");
   if (!formulario) return; // no estamos en registro.html
 
+  const idEdicion = new URLSearchParams(window.location.search).get("id");
+  if (idEdicion) {
+  obtenerRegistro(idEdicion).then((reg) => {
+    document.getElementById("nombre").value = reg.nombre || "";
+    document.getElementById("apellido").value = reg.apellido || "";
+    document.getElementById("cedula").value = reg.cedula || "";
+    document.getElementById("email").value = reg.email || "";
+    document.getElementById("telefono").value = reg.telefono || "";
+    document.getElementById("categoria").value = reg.categoria || "";
+    document.getElementById("estado").value = reg.estado || "";
+    });
+  }
   // Campos que tienen reglas de validacion
   const camposValidables = Object.keys(REGLAS)
     .map((id) => document.getElementById(id))
@@ -262,9 +294,6 @@ function inicializarFormulario() {
       if (primerError) primerError.focus();
       return;
     }
-
-
-
     const nuevoRegistro = {
       
       nombre: document.getElementById("nombre").value.trim(),
@@ -275,14 +304,15 @@ function inicializarFormulario() {
       estado: document.getElementById("estado").value,
       fecha: formatearFecha(new Date())
     };
-
-  
-    await guardarRegistro(nuevoRegistro);
-
-   mostrarMensajeGlobal(
-  "Registro guardado correctamente.",
-  "exito"
-);
+  if (idEdicion) {
+  await actualizarRegistro(idEdicion, nuevoRegistro);
+  } else {
+  await guardarRegistro(nuevoRegistro);
+  }
+    mostrarMensajeGlobal(
+    "Registro guardado correctamente.",
+    "exito"
+  );
 
     // Limpiar formulario y estados visuales
     formulario.reset();
@@ -308,25 +338,33 @@ async function inicializarDashboard() {
 
   // Construir filas (mas recientes primero)
   const filas = registros
-    .slice()
-    .reverse()
-    .map((reg) => {
-      const idFormateado = "#" + String(reg.id).padStart(4, "0");
-      const nombreCompleto = escaparHtml(reg.nombre + " " + reg.apellido);
-      return (
-        "<tr>" +
-        "<td>" + idFormateado + "</td>" +
-        "<td>" + nombreCompleto + "</td>" +
-        "<td>Tipo " + escaparHtml(reg.categoria) + "</td>" +
-        "<td>" + reg.fecha + "</td>" +
-        "<td>" + etiquetaEstado(reg.estado) + "</td>" +
-        "</tr>"
-      );
-    })
-    .join("");
+  .slice()
+  .reverse()
+  .map((reg) => {
+    const idFormateado = "#" + String(reg.id).padStart(4, "0");
+    const nombreCompleto = escaparHtml(reg.nombre + " " + reg.apellido);
+    return (
+      "<tr>" +
+      "<td>" + idFormateado + "</td>" +
+      "<td>" + nombreCompleto + "</td>" +
+      "<td>Tipo " + escaparHtml(reg.categoria) + "</td>" +
+      "<td>" + reg.fecha + "</td>" +
+      "<td>" + etiquetaEstado(reg.estado) + "</td>" +
+      "<td>" +
+        "<a class='btn btn-sm btn-outline-primary me-1' href='registro.html?id=" + reg.id
++ "'>Editar</a>" +
+        "<button class='btn btn-sm btn-outline-danger btn-eliminar' data-id='" + reg.id +
+"'>Eliminar</button>" +
+      "</td>" +
+      "</tr>"
+    );
+  })
+  .join("");
 
   cuerpoTabla.innerHTML = filas; // reemplaza los datos demo por los reales
-
+  cuerpoTabla.querySelectorAll(".btn-eliminar").forEach((btn) => {
+  btn.addEventListener("click", () => eliminarRegistro(btn.dataset.id));
+  });
   actualizarContadores(registros);
 }
 
